@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+   
+}
+/*Header i nav + przycisk do logowania*/
+/*Do wszystkich stron*/
+li, a, button{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 450;
+    font-size: 15px;
+    color: black;
+    text-decoration: none;
+
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10%;
+    background-color: #646ecb;
+}
+.logo{
+    cursor: pointer;
+    width: 100px;
+}
+.nav-links{
+    list-style: none;
+}
+.nav-links li{
+    display: inline-block;
+    padding: 0px 10px;
+}
+.nav-links li a{
+    transition: all 0.3s ease 0s;
+}
+.nav-links li a:hover{
+   color: rgb(58, 53, 53);
+}
+button{
+    padding: 9px 25px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+button .ct{
+    background-color: rgb(251, 252, 255);
+}
+button:hover{
+    background-color: rgb(202, 196, 196);
+}
+
+/*responsywność*/
+.burger{
+    display: none;
+}
+.burger div{
+    width: 25px;
+    height: 3px;
+    background-color: rgb(35, 31, 31);
+    margin: 5px;
+}
+
+@media only screen and (max-width: 768px){
+    .nav-links{
+        position: fixed;
+        background-color: #646ecb;
+        height: 100vh;
+        width: 100%;
+        top: 80px;
+        left: -100%;
+        text-align: center;
+        z-index: 1;
+        opacity: 0;
+        transition: all 0.5s ease 0s;
+    }
+    .nav-links li{
+        display: block;
+        margin: 50px 0;
+        line-height: 30px;
+    }
+    .nav-links li a{
+        font-size: 20px;
+    }
+    .burger{
+        display: block;
+        cursor: pointer;
+    }
+}
+
+/*koniec reposywnosci*/
+
+/*STRONA INDEX.PHP*/
+/*Możan poprawić rozmiawy wyświetlanego obrazu*/
+section .main{
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    display:block;
+   
+}
+div.search{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 493px;
+    
+
+}
+.search {
+    background-image: url("img/sofa-purple-living-room-with-copy-space.jpg");
+    background-size: cover;
+    flex-direction: column;
+    backdrop-filter: brightness(200%) contrast(200%);
+    -webkit-backdrop-filter: brightness(200%) contrast(200%);
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(0px);
+    filter: brightness(103%);
+  
+  }
+.search h1{
+    position: relative;
+    margin-bottom: 2%;
+    font-family: "";
+    font-size:30px;
+    color: white;
+}
+.search p{
+    position: relative;
+    margin-bottom: 2%;
+    
+}
+button .cta{
+    position: relative;
+    margin-bottom: 2%;
+}
