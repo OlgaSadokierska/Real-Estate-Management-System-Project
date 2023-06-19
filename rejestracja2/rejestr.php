@@ -1,5 +1,6 @@
 <?php
 require_once "../config.php";
+session_start();
 
 // Sprawdzenie czy formularz został wysłany
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -9,22 +10,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = mysqli_real_escape_string($link, $_POST["email"]);
     $telefon = mysqli_real_escape_string($link, $_POST["telefon"]);
 
-    // Wstawienie danych do tabeli użytkownik
-    $query1 = "INSERT INTO uzytkownik (imie, nazwisko, numer_telefonu, mail, ID_konto) VALUES ('$imie', '$nazwisko', '$telefon', '$email', (SELECT id FROM konto ORDER BY id DESC LIMIT 1))";
-    $result1 = mysqli_query($link, $query1);
+    // Sprawdzenie czy identyfikator istnieje w sesji
+    if (isset($_SESSION['lastInsertId'])) {
+        // Pobranie identyfikatora z sesji
+        $id_konto = mysqli_real_escape_string($link, $_SESSION['lastInsertId']);
 
-    // Sprawdzenie czy zapytanie zostało wykonane poprawnie
-    if ($result1) {
-        // Rejestracja powiodła się
-        echo "Rejestracja zakończona sukcesem.";
-       /* header("Refresh: 2; URL=../");*/
-        exit;
+        // Wstawienie danych do tabeli użytkownik
+        $query1 = "INSERT INTO uzytkownik (imie, nazwisko, numer_telefonu, mail, id) VALUES ('$imie', '$nazwisko', '$telefon', '$email', '$id_konto')";
+        $result1 = mysqli_query($link, $query1);
 
+        // Sprawdzenie czy zapytanie zostało wykonane poprawnie
+        if ($result1) {
+            // Rejestracja powiodła się
+            header("location: ../logowanie/stronalogowania.php");
+            // Usuń przechowany identyfikator z sesji
+            unset($_SESSION['lastInsertId']);
+            exit;
+        } else {
+            // Wystąpił błąd przy rejestracji
+            echo "Wystąpił błąd podczas rejestracji: " . mysqli_error($link);
+        }
     } else {
-        // Wystąpił błąd przy rejestracji
-        echo "Wystąpił błąd podczas rejestracji: " . mysqli_error($link);
+        // Brak przechowanego identyfikatora w sesji
+        echo "Błąd rejestracji. Powróć i wypełnij poprawnie pierwszy formularz.";
     }
 }
+
+
 ?>
 
 

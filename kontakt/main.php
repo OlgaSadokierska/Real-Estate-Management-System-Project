@@ -75,49 +75,64 @@
 					</div>
 					<div class="col-md-6 col-lg-5 col-xl-4">
 						<div>
-							<form class="p-3 p-xl-4" method="post">
+							<form class="p-3 p-xl-4" method="POST">
 								<!-- Start: Success Example -->
 								<div class="mb-3">
+								<label for="name">Imię:</label>
 									<input
 										class="form-control"
 										type="text"
-										id="name-1"
+										id="name"
 										name="name"
 										placeholder="Name"
 									/>
 								</div>
 								<!-- End: Success Example --><!-- Start: Error Example -->
 								<div class="mb-3">
+								<label for="email">Email:</label>
 									<input
 										class="form-control"
 										type="email"
-										id="email-1"
+										id="email"
 										name="email"
 										placeholder="Email"
 									/>
 								</div>
 								<!-- End: Error Example -->
 								<div class="mb-3">
+								<label for="message">Treść:</label>
 									<textarea
 										class="form-control"
-										id="message-1"
+										id="message"
 										name="message"
 										rows="6"
-										placeholder="Message"
+										placeholder="Treść"
 									></textarea>
 								</div>
 								<div>
-									<button
-										class="btn btn-primary d-block w-100"
-										type="submit"
-										style="background: rgb(100, 110, 203)"
-									>
-										Wyślij
-									</button>
+								<button class="btn btn-primary d-block w-100" type="submit" style="background: rgb(100, 110, 203)">Wyślij</button>
 								</div>
 							</form>
+							<?php
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $treść = $_POST['message'];
+    $autor = $_POST['name'];
+    $email = $_POST['email'];
+
+    $insertQuery = "INSERT INTO komentarz (`name`, `email`, `tresc`) VALUES ('$autor','$email','$treść')";
+		
+    $insertResult = mysqli_query($link, $insertQuery);
+    
+    if ($insertResult) {
+        echo "Dodano typ domu do bazy danych.";
+    } else {
+        echo "Błąd przy dodawaniu typu domu: " . mysqli_error($link);
+    }
+}?>
 						</div>
 					</div>
 				</div>
 			</div>
+		
 		</section>
+
