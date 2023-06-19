@@ -13,7 +13,9 @@
 						<a class="link-light" href="./kontakt.php">Kontakt</a>
 					</li>
 				</ul>
+				<a href="./index.php">
 </div>
+<div><img class="logo" src="./img/logo_transparent_prostokat.png"></a></div>
 <div>
 		<div class="footer-logo"><p>"      "</p></div>
 				<p class="mb-0" style="color: rgb(255, 255, 255)">

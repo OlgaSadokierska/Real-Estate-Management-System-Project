@@ -65,6 +65,18 @@ button:hover{
     background-color: rgb(202, 196, 196);
 }
 
+#btn-violet{
+    padding: 8px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    background-color: #646ecb;
+}
+#btn-violet:hover{
+    background-color: rgb(202, 196, 196);
+}
+
 /*responsywność*/
 .burger{
     display: none;
@@ -184,5 +196,10 @@ footer{
     width: 100px;
 }
 
+form#form-login{
+    margin: 20px;
+}
 
-
+th{
+    width: 90vw;
+}

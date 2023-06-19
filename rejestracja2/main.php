@@ -18,7 +18,10 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label" id="lbl-email" for="email">Email</label>
-                    <input class="form-control" type="text" id="txt-email" name="email">
+                    <input class="form-control" type="email"
+										id="txt-email"
+										name="email"
+										placeholder="Email" >
                 </div>
                 <div class="mb-3">
                     <label class="form-label" id="lbl-login" for="telefon">Telefon</label>

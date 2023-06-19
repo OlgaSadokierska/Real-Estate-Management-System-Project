@@ -5,9 +5,9 @@
                 <h2 style="color: rgb(100,110,203);">O nas</h2>
                 <p>AUTORKI PROJEKTU:</p>
 				<p>Izabela Najder</p>
-				<p>Numer indeksu: </p>
+				<p>Numer indeksu: 398869</p>
 				<p>Olga Sadokierska</p>
-				<p>Numer indeksu: </p>
+				<p>Numer indeksu: 398886</p>
             </div>
         </div>
     </div>

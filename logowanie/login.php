@@ -1,6 +1,5 @@
 <?php
 require_once "../config.php";
-session_start();
 // Sprawdzenie czy formularz został wysłany
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Pobranie danych z formularza
@@ -12,32 +11,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $haslo = mysqli_real_escape_string($link, $haslo);
     
     // Zapytanie do bazy danych w celu sprawdzenia poprawności danych logowania
-    $query = "SELECT * FROM konto WHERE login = '$login' AND haslo = '$haslo'";
-    $result = mysqli_query($link, $query);
+    $query_konto = "SELECT * FROM konto WHERE login = '$login' AND haslo = '$haslo'";
+    $result_logowanie = mysqli_query($link, $query_konto);
     
     // Sprawdzenie czy zapytanie zwróciło wyniki
-    if (mysqli_num_rows($result) == 1) {
+    if (mysqli_num_rows($result_logowanie) == 1) {
         // Dane logowania są poprawne
-        $query1 = "SELECT * FROM dom ";
-        $result1 = mysqli_query($link, $query1);
-        if ($result1) {
-            // Pętla po wynikach zapytania
-            while ($row = mysqli_fetch_assoc($result1)) {
+        $_SESSION["loggedin"] = true;
+        $userID = $_SESSION["log"]["id"];
+
+// Zapisanie ID użytkownika w sesji
+        $_SESSION['user_id'] = $userID;
+
+         // Kod przekierowujący użytkownika na index po zalogowaniu                          
+        header("location: ../index.php");
+
+        while ($row_log = mysqli_fetch_assoc($result_logowanie)) 
+                {
                 // Wyświetlanie danych
-                echo 'ID: ' . $row['id'] . '<br>';
-                echo 'Nazwa: ' . $row['nazwa_domu'] . '<br>';
-                echo 'Opis: ' . $row['opis'] . '<br>';
-                echo '<br>';
+                $_SESSION["log"] = $row_log; 
 
-                $_SESSION["loggedin"] = true;
-                $_SESSION["username"] = $username;                            
+                echo 'ID: ' . $row_log['id'] . '<br>';
+                echo 'Login: ' . $row_log['login'] . '<br>';
+                echo 'Typ konta: ' . $row_log['typ_konta'] . '<br>';
+                echo '<br>';  
+                }
 
-                header("location: ../index.php");
-            }
-        } else {
-            echo 'Błąd zapytania: ' . mysqli_error($link);
-        }
-        // Dodaj tutaj kod przekierowujący użytkownika na inną stronę po zalogowaniu
+        $userID = $_SESSION["log"]['id'];
+        $query_uzytkownik = "SELECT * FROM uzytkownik WHERE id='$userID'";
+        $result_uzytkownik = mysqli_query($link, $query_uzytkownik);
+        while ($row_uzytkownik = mysqli_fetch_assoc($result_uzytkownik)) 
+                {
+                // Wyświetlanie danych
+                $_SESSION["uzytkownik"] = $row_uzytkownik; 
+                echo 'ID: ' . $row_uzytkownik['id'] . '<br>';
+                echo 'Login: ' . $row_uzytkownik['imie'] . '<br>';  
+                }
     } else {
         // Dane logowania są niepoprawne
         echo "Błędny login lub hasło.";
