@@ -53,7 +53,8 @@ if (!$resultTypDzielnicy) {
 </form>
     
 <?php
-$query = "SELECT dom.id as Numer, nazwa_domu AS Nazwa, opis AS Opis, typ_dom.nazwa_typu AS 'Typ domu', metraz AS 'Metraż', cena AS Cena, ilosc_pokoi AS 'Ilość pokoi', ilosc_pietr AS 'Ilość pięter', balkon AS Balkon, ogrod AS Ogród, garaz AS Garaż, piwnica AS Piwnica, osiedle.nazwa_osiedla AS Osiedle, zdjecia.sciezka AS Zdjęcie
+
+$query = "SELECT dom.id as Numer, nazwa_domu AS Nazwa, opis AS Opis, typ_dom.nazwa_typu AS 'Typ domu', metraz AS 'Metraż', cena AS Cena, ilosc_pokoi AS 'Ilość pokoi', ilosc_pietr AS 'Ilość pięter', balkon AS Balkon, ogrod AS Ogród, garaz AS Garaż, piwnica AS Piwnica, osiedle.nazwa_osiedla AS Osiedle, zdjecia.sciezka AS Sciezka
           FROM dom 
           INNER JOIN typ_dom ON dom.ID_typ_dom = typ_dom.id 
           INNER JOIN osiedle ON dom.ID_osiedle = osiedle.id 
@@ -99,7 +100,7 @@ if ($result) {
             echo "\t<tr>\n";
 
             foreach ($row as $column => $value) {
-                if ($column == 'ZDJĘCIE') {
+                if ($column == 'Sciezka') {
                     $adres_url = "./img/" . $value;
                     echo "\t\t<td><img src=\"$adres_url\" style=\"width: 100px\" alt=\"Zdjęcie\"></td>\n";
                 } else {
@@ -117,7 +118,7 @@ if ($result) {
                     echo "Nie masz uprawnień";
                 } else {
                     echo '<form method="POST" action="' . $_SERVER['PHP_SELF'] . '">';
-                    echo '<input type="hidden" name="domID" value="' . $row['numer'] . '">';
+                    echo '<input type="hidden" name="domID" value="' . $row['Numer'] . '">';
                     echo '<button type="submit" id="rezerwuj" style="
                     background-color: #5e72e4;
                     color:white;
@@ -148,21 +149,14 @@ if ($result) {
         $userID = $_SESSION['user_id'];
         $currentDate = date("Y-m-d H:i:s"); // Current date and time
 
-        if (!empty($domID) && is_numeric($domID)) {
-            if ($typ_konta == "PR" || $typ_konta == 'AD') {
-                echo "Nie masz uprawnień";
-            } else {
-                $insertQuery = "INSERT INTO rezerwacja (ID_uzytkownik, ID_dom, data_rezerwacji) VALUES ('$userID', '$domID', '$currentDate')";
-                $insertResult = mysqli_query($link, $insertQuery);
+        $queryRezerwacja = "INSERT INTO rezerwacja (ID_dom, ID_uzytkownik, data_rezerwacji) VALUES ('$domID', '$userID', '$currentDate')";
+        $resultRezerwacja = mysqli_query($link, $queryRezerwacja);
 
-                if ($insertResult) {
-                    header("location: ./rezerwacje.php");
-                } else {
-                    echo "Błąd podczas rezerwacji: " . mysqli_error($link);
-                }
-            }
+        if (!$resultRezerwacja) {
+            echo "Błąd zapytania rezerwacja: " . mysqli_error($link);
         } else {
-            echo "Nieprawidłowy identyfikator domu.";
+            echo "<script>alert('Pomyślnie zarezerwowano dom.');</script>";
+            echo "<script>window.location.replace('" . $_SERVER['PHP_SELF'] . "');</script>";
         }
     }
 } else {
