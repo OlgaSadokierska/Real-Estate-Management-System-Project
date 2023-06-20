@@ -123,6 +123,7 @@ if (file_exists("../include/cmsheader.php")) {
 </form>
 
 <?php
+/*
 $target_dir = __DIR__ . "/../../img/";
 $target_file = $target_dir . $_FILES["file"]["name"];
 $uploadOk = 1;
@@ -183,7 +184,7 @@ if ($uploadOk == 0) {
   }
 }
 
-/*if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Pobranie danych formularza
     $nazwa_domu = $_POST['nazwa_domu'];
     $opis = $_POST['opis'];
@@ -199,7 +200,7 @@ if ($uploadOk == 0) {
     $typ_osiedla = $_POST['typ_osiedla'];
     $typ_dzielnicy = $_POST['typ_dzielnicy'];
 
-    $file = $_FILES['zdjecie'];
+    $file = $_FILES['file'];
     $fileName = $file['name'];
     $fileTmpName = $file['tmp_name'];
     $fileError = $file['error'];
@@ -246,5 +247,104 @@ if (file_exists("../include/cmsfooter.php")) {
   }else{
    echo"nie ma";
   }
-  */
+*/
+
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Pobranie danych formularza
+    $nazwa_domu = $_POST['nazwa_domu'];
+    $opis = $_POST['opis'];
+    $typ_domu = $_POST['typ_domu'];
+    $metraz = $_POST['metraz'];
+    $cena = $_POST['cena'];
+    $ilosc_pokoi = $_POST['ilosc_pokoi'];
+    $ilosc_pietr = $_POST['ilosc_pietr'];
+    $balkon = $_POST['balkon'];
+    $ogrod = $_POST['ogrod'];
+    $garaz = $_POST['garaz'];
+    $piwnica = $_POST['piwnica'];
+    $typ_osiedla = $_POST['typ_osiedla'];
+    $typ_dzielnicy = $_POST['typ_dzielnicy'];
+
+    $file = $_FILES['file'];
+    $fileName = $file['name'];
+    $fileTmpName = $file['tmp_name'];
+    $fileError = $file['error'];
+
+    $target_dir = __DIR__ . "/../../img/";
+    $target_file = $target_dir . $fileName;
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check if image file is an actual image or fake image
+    if (isset($_POST["submit"])) {
+        $check = getimagesize($fileTmpName);
+        if ($check !== false) {
+            echo "File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image.";
+            $uploadOk = 0;
+        }
+    }
+
+    if (!is_dir($target_dir)) {
+        echo $target_dir . ' does not exist.';
+    } elseif (!is_writable($target_dir)) {
+        echo 'Upload directory is not writable.';
+    } elseif (file_exists($target_file)) {
+        echo "Sorry, file already exists.";
+        $uploadOk = 0;
+    } elseif ($_FILES["file"]["size"] > 500000) {
+        echo "Sorry, your file is too large.";
+        $uploadOk = 0;
+    } elseif ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+    }
+
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        echo "Sorry, your file was not uploaded.";
+    } else {
+        if (move_uploaded_file($fileTmpName, $target_file)) {
+            // Zapisanie danych w bazie danych
+            $insertQuery = "INSERT INTO dom (nazwa_domu, opis, ID_typ_dom, metraz, cena, ilosc_pokoi, ilosc_pietr, balkon, ogrod, garaz, piwnica, ID_osiedle)
+                            VALUES ('$nazwa_domu', '$opis', '$typ_domu', '$metraz', '$cena', '$ilosc_pokoi', '$ilosc_pietr', '$balkon', '$ogrod', '$garaz', '$piwnica', '$typ_osiedla')";
+
+            $insertResult = mysqli_query($link, $insertQuery);
+
+            if ($insertResult) {
+                $domId = mysqli_insert_id($link);
+
+                $insertImageQuery = "INSERT INTO zdjecia (sciezka, dom_id)
+                                     VALUES ('$fileName', '$domId')";
+
+                $insertImageResult = mysqli_query($link, $insertImageQuery);
+
+                if ($insertImageResult) {
+                    echo "Dodano dom z zdjęciem do bazy danych.";
+                } else {
+                    echo "Błąd przy dodawaniu zdjęcia: " . mysqli_error($link);
+                }
+            } else {
+                echo "Błąd przy dodawaniu domu: " . mysqli_error($link);
+            }
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+}
+
+if (file_exists("../include/cmsfooter.php")) {
+    include("../include/cmsfooter.php");
+} else {
+    echo "Nie ma.";
+}
+
+
+
+  
 ?>
